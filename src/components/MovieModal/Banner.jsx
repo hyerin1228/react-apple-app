@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { styled } from "styled-components"
 import axios from "../../api/axios"
 import './Banner.css'
 import requests from "../../api/request";
 
 const Banner = () => {
 
-  const [movie, setMovie] = useState([]);
+  const [movie, setMovie] = useState(null);
+  const [isClicked, setisClicked] = useState(false)
 
   useEffect(() => {
     fetchData();
@@ -28,9 +30,101 @@ const Banner = () => {
     console.log(movieDetail);
   }
 
-  return (
-    <div>Banner</div>
-  )
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substring(0, n) + "..." : str;
+  }
+
+  if(!movie){
+    return (
+      <div>
+        loading...
+      </div>
+    )
+  }
+  
+  if(!isClicked){
+    return (
+      <div 
+        className="banner"
+        style={{
+          background: `url("https://image.tmdb.org/t/p/original${movie.backdrop_path})`,
+          backgroundPosition: "top center",
+          backgroundSize: "cover"
+        }}
+      >
+        <div className="banner__contents">
+          <h1 className="banner__title">
+            {movie.title || movie.name || movie.origin_name}
+          </h1>
+          <div>
+            {movie.videos?.results[0]?.key ?
+            <button 
+              className="banner__button play"
+              onClick={() => setisClicked(true)}
+            >
+              Play
+            </button>  
+            : null
+            }
+          </div>
+          <p className="banner_description">
+            {truncate(movie.overview, 100)}
+          </p>
+        </div>
+        <div className="banner--fadeBottom" />
+      </div>
+    )
+  }else{
+    return(
+      <>
+      <Container>
+        <HomeContainer>
+        <Iframe width="560" height="315"
+          src={`https://www.youtube.com/embed/${movie.videos.results[0].key}?control=0&autoplay=1&mute=1`}
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; 
+          encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+          </Iframe>
+        </HomeContainer>
+      </Container>
+      <button onClick={() => setisClicked(false)}>
+        X
+      </button>
+      </>
+    )
+  }
 }
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  flex-direction: column;
+  width: 100%; 
+  height: 100vh;
+`
+
+const HomeContainer = styled.div`
+  width: 100%;
+  height: 100%;
+`
+
+const Iframe = styled. iframe`
+  width: 100%; 
+  height: 100%; 
+  z-index: -1; 
+  opacity: 0.65;
+  border: none;
+
+  &:: after {
+    content: "";
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+  ｝
+`;
 
 export default Banner
