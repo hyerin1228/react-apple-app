@@ -5,6 +5,7 @@ import MainPage from './pages/MainPage/index';
 import DetailPage from './pages/DetailPage/index';
 import SearchPage from './pages/SearchPage/index';
 import Nav from './components/MovieModal/Nav';
+import {useRef} from 'react'
 
 
 
@@ -19,6 +20,10 @@ const Layout = () => {
 
 
 function App() {
+
+  const ref = useRef('안녕하세요');
+  console.log(ref);
+
 
   return (
    <>

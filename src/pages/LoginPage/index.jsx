@@ -20,7 +20,7 @@ const Container  = styled.section`
     flex-direction: column; 
     justify-content: center; 
     align-items: center;
-    height:
+    height: 100vh;
 `;
 
 const Center = styled.div`

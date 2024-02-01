@@ -1,15 +1,25 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react'
+import React, { useRef } from 'react'
 import './MovieModal.css'
 import { imageBasePath } from '../../constant';
+import useOnClickOutside from '../../hooks/useOnClickOutside';
 
 
 // eslint-disable-next-line no-unused-vars, react/prop-types
 const MovieModal = ({ backdrop_path, title, overview, name, release_date, first_air_date, vote_average, setModalOpen }) => {
+  
+
+  const ref = useRef(null);
+
+  useOnClickOutside(ref, () => {
+    setModalOpen(false);
+  })
+  // console.log(ref);
+  
   return (
     <div className='presentation' role="presentation">
       <div className='wrapper-modal'>
-        <div className='modal'>
+        <div className='modal' ref={ref}>
           <span
             onClick={() => setModalOpen(false)}
             className='modal-close'

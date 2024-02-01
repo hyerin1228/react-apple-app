@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { styled } from "styled-components"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom';
+import { styled } from "styled-components";
+import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
+import app from '../../firebase';
+
 
 const Nav = () => {
     
@@ -9,6 +12,11 @@ const Nav = () => {
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
 
+    const {pathname} = useLocation();
+
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
     const listener = () => {
         if(window.scrollY > 50){
             setShow("true");
@@ -16,6 +24,19 @@ const Nav = () => {
             setShow("false");
         }
     }
+
+    useEffect(() => {
+      onAuthStateChanged(auth, (user) => {
+        if(!user) {
+          navigate('/');
+        }else if(user && pathname === "/") {
+          navigate('/main');
+        }
+      }) // 리스너 등록
+
+    }, [auth, navigate, pathname])
+    
+
 
     useEffect(() => {
         window.addEventListener('scroll', listener);
@@ -29,7 +50,17 @@ const Nav = () => {
       setSearchValue(e.target.value)
       navigate(`/search?q=${e.target.value}`);
     }
-    
+  
+    const handleAuth = () => {
+      signInWithPopup(auth, provider)
+      // eslint-disable-next-line no-unused-vars
+      .then((result) => {
+
+      })
+      .catch((error) => {
+        alert(error.message);
+      })
+    }
 
   return (
     <NavWrapper show={show}>
@@ -41,17 +72,20 @@ const Nav = () => {
           />
       </Logo>
 
-    <Input
-      type="text"
-      className="nav__input"
-      value={searchValue}
-      onChange={handleChange}
-      placeholder="영화를 검색해주세요."
-    />
-      <Login>
-        로그인
-      </Login>
-
+      {pathname === "/" ? (
+        <Login
+          onClick={handleAuth}
+        >로그인</Login>
+      ) :
+        ( <Input
+            type="text"
+            className="nav__input"
+            value={searchValue}
+            onChange={handleChange}
+            placeholder="영화를 검색해주세요."
+          />
+        )
+      }
     </NavWrapper>
   )
 }
