@@ -3,11 +3,22 @@ import React, { useRef, useState } from 'react'
 import './MovieModal.css'
 import { imageBasePath } from '../../constant';
 import useOnClickOutside from '../../hooks/useOnClickOutside';
+import { useGenres } from './GenreContext';
+
 
 // eslint-disable-next-line no-unused-vars, react/prop-types
-const MovieModal = ({  backdrop_path, title, overview, name, release_date, first_air_date, vote_average, setModalOpen }) => {
+const MovieModal = ({ genre_ids, backdrop_path, title, overview, name, release_date, first_air_date, vote_average, setModalOpen }) => {
 
+  const genres = useGenres();
   //const backdropUrl = `${imageBasePath}${backdrop_path})`;
+
+  // console.log(typeof genres)
+  // console.log(Array.isArray(genres))
+  // console.log(genre_ids)
+
+  const pickedGenres = genres.filter( genre => Object(genre_ids).includes(genre.id));
+  const genreNames = pickedGenres.map(genre => genre.name+" " )
+  // console.log(pickedGenres)
 
   const ref = useRef(null);
 
@@ -50,6 +61,7 @@ const MovieModal = ({  backdrop_path, title, overview, name, release_date, first
                 <h2>
                   {title ? title: name}
                 </h2>
+                <p>장르 : {genreNames}</p>
                 <p className='modal__overview'>평점: {vote_average}</p>
                 <p className='modal__overview'>{overview}</p>
             </div>

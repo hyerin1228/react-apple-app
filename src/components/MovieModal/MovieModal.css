@@ -1,7 +1,7 @@
 .wrapper-modal {
     position: fixed;
-    /* inset: 0px; */
-    inset: 259px;
+    inset: 0px;
+    /* inset: 259px; */
     background-color: Orgb(0 0 0 / 71%);
     display: flex;
     justify-content: center;
