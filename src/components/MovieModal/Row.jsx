@@ -27,6 +27,7 @@ const Row = ({ title, id, fetchUrl }) => {
   const handleClick = (movie) => {
     setModalOpen(true);
     setMovieSelected(movie);
+    console.log(movie);
   }
 
   const fetchMovieData = useCallback(async () => {
